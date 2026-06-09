@@ -491,64 +491,29 @@ footer a:hover { text-decoration: underline; }
       <div class="wi full">
         <span class="wi-no">01 · CORE</span>
         <h3>voice-agent 오케스트레이션 설계</h3>
-        <p>STT → LLM → TTS 단계를 조율하고 대화 상태를 관리하는 흐름의 중심. 입력부터 음성 재생까지 전체 호출 순서와 예외 상태를 설계했습니다.</p>
-        <div class="chips"><span>state management</span><span>STT</span><span>LLM</span><span>TTS</span></div>
+        <p>STT → LLM → TTS 흐름의 중심. 입력 수신부터 음성 재생까지 단계 조율과 예외 상태를 직접 설계했습니다.</p>
+        <div class="chips"><span>STT</span><span>LLM</span><span>TTS</span><span>state management</span></div>
       </div>
       <div class="wi">
         <span class="wi-no">02</span>
         <h3>LLM 응답 계약 설계</h3>
-        <p><code style="font-family:var(--mono);font-size:.82em;background:#f0f0f2;padding:1px 5px;border-radius:3px">answer</code> + <code style="font-family:var(--mono);font-size:.82em;background:#f0f0f2;padding:1px 5px;border-radius:3px">action_proposal</code> 이중 출력 계약을 정의해 LLM이 대화와 장치 동작 제안을 함께 반환하도록 설계했습니다.</p>
+        <p><code style="font-family:var(--mono);font-size:.82em;background:#f0f0f2;padding:1px 5px;border-radius:3px">answer</code> + <code style="font-family:var(--mono);font-size:.82em;background:#f0f0f2;padding:1px 5px;border-radius:3px">action_proposal</code> 이중 출력 구조로 대화와 장치 제어를 한 번에 반환하도록 계약을 정의했습니다.</p>
       </div>
       <div class="wi">
         <span class="wi-no">03</span>
         <h3>허용 설정 검증 계층</h3>
-        <p>LLM 제안을 안전한 장치 범위로만 강제하는 검증 계층 구현. 사전 정의된 allow-list 외의 동작 제안은 차단됩니다.</p>
+        <p>LLM 제안을 allow-list 기반으로 검증해 안전한 장치 범위 밖의 동작을 차단했습니다.</p>
       </div>
       <div class="wi">
         <span class="wi-no">04</span>
-        <h3>Windows Bridge — 장치 입력 처리</h3>
-        <p>RP2040 PCM 수신 · 음성 구간 감지(VAD) · 재생 제어를 구현해 하드웨어 음성 입출력 경로를 연결했습니다.</p>
+        <h3>Windows Bridge</h3>
+        <p>RP2040 PCM 수신 · VAD · 재생 제어를 구현해 하드웨어 음성 입출력을 연결했습니다.</p>
         <div class="chips"><span>PCM</span><span>VAD</span><span>playback</span></div>
       </div>
       <div class="wi">
         <span class="wi-no">05</span>
         <h3>센서 → AI 트리거 연결</h3>
-        <p>Wemos 거리 센서 입력을 LLM 기반 선제 인사 트리거로 연결. 사람이 다가오면 먼저 말을 거는 흐름을 만들었습니다.</p>
-      </div>
-    </div>
-
-    <!-- LLM 응답 계약 코드 스니펫 -->
-    <div class="code-row">
-      <div class="code-card">
-        <div class="code-top">
-          <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
-          <span class="fn">llm_response.json</span>
-        </div>
-<pre><span class="tk-c">// LLM 단일 응답 = 대화 + 동작 제안</span>
-{
-  <span class="tk-k">"answer"</span>: <span class="tk-s">"네, 거실 조명을 켤게요."</span>,
-  <span class="tk-k">"action_proposal"</span>: {
-    <span class="tk-k">"setting"</span>: <span class="tk-s">"wake_enabled"</span>,
-    <span class="tk-k">"value"</span>: <span class="tk-a">true</span>
-  }
-}
-
-<span class="tk-c">// → 검증 계층(allow-list) 통과 후</span>
-<span class="tk-c">//   실제 장치에 반영</span></pre>
-      </div>
-      <div class="code-notes">
-        <div class="cn accent-l">
-          <h4>🛡 허용 설정 검증 계층</h4>
-          <p>LLM의 자유로운 제안을 그대로 실행하지 않고, 사전 정의된 안전 범위 안에서만 적용합니다.</p>
-        </div>
-        <div class="cn">
-          <h4>런타임 제어 설정 항목</h4>
-          <div class="settings">
-            <div class="setting"><span class="dot"></span>wake_enabled<span class="desc">웨이크 활성</span></div>
-            <div class="setting"><span class="dot"></span>distance_detection_enabled<span class="desc">거리감지</span></div>
-            <div class="setting"><span class="dot"></span>distance_threshold_cm<span class="desc">감지 거리</span></div>
-          </div>
-        </div>
+        <p>Wemos 거리 센서를 LLM 선제 인사 트리거로 연결해 접근 감지 시 자동 응답 흐름을 만들었습니다.</p>
       </div>
     </div>
   </div>
