@@ -169,6 +169,7 @@ section { padding: 56px 0; }
 .wi {
   border: 1px solid var(--border); border-radius: 10px; padding: 20px 20px 18px;
   background: var(--bg);
+  display: flex; flex-direction: column;
 }
 .wi:hover { border-color: rgba(255,60,0,.35); }
 .wi.full { grid-column: 1 / -1; background: var(--dark); border-color: var(--dark); }
@@ -178,7 +179,7 @@ section { padding: 56px 0; }
 .wi.full h3 { color: #fff; font-size: 1.15rem; }
 .wi p { font-size: .84rem; color: var(--muted); line-height: 1.6; }
 .wi.full p { color: rgba(255,255,255,.68); }
-.wi .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+.wi .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: auto; padding-top: 14px; }
 .chip {
   font-family: var(--mono); font-size: .68rem; padding: 3px 8px;
   border-radius: 4px; background: #fff; border: 1px solid var(--border); color: #4a4a57;
@@ -490,7 +491,7 @@ footer a:hover { text-decoration: underline; }
       <div class="wi full">
         <span class="wi-no">01 · CORE</span>
         <h3>voice-agent 오케스트레이션 설계</h3>
-        <p>STT → LLM → TTS 단계를 조율하고 대화 상태를 관리하는 흐름의 중심. 입력부터 음성 재생까지 호출 순서와 예외 상태를 직접 설계했습니다.</p>
+        <p>STT → LLM → TTS 단계를 조율하고 대화 상태를 관리하는 흐름의 중심. 입력부터 음성 재생까지 전체 호출 순서와 예외 상태를 설계했습니다.</p>
         <div class="chips"><span>state management</span><span>STT</span><span>LLM</span><span>TTS</span></div>
       </div>
       <div class="wi">
