@@ -1,17 +1,10 @@
-# 작업용 드래프트
-AIoT_Agent_*.html
-Super_Marimo_*.html
+# 드래프트 HTML
+AIoT_Agent_이지양_*.html
 
-# 스크린샷
-*.png
-
-# PPTX / 대용량
-*.pptx
+# 대용량 / 작업용
+portfolio_theme.pptx
 unpacked/
-
-# 소스 문서
-*.md
-*.txt
+*.png
 
 # Claude 설정
 .claude/
