@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이지양 · Super Marimo — AIoT Voice Agent</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:     #EEEEEE;
+  --dark:   #1a1a2e;
+  --darker: #13131f;
+  --accent: #FF3C00;
+  --text:   #1a1a2e;
+  --muted:  #6b6b78;
+  --card:   #ffffff;
+  --border: #e2e2e6;
+  --line:   #c9c9d0;
+  --mono:   'Consolas', 'D2Coding', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Pretendard', -apple-system, 'Malgun Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 840px; margin: 0 auto; padding: 0 28px; }
+
+/* ── 섹션 공통 ── */
+section { padding: 56px 0; }
+
+.eyebrow {
+  font-size: .68rem; font-weight: 700; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--accent);
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-bottom: 12px;
+}
+.eyebrow::before { content: ""; width: 20px; height: 2px; background: var(--accent); flex-shrink: 0; }
+
+.sec-title {
+  font-size: 1.7rem; font-weight: 800; letter-spacing: -.025em;
+  line-height: 1.2; margin-bottom: 10px;
+}
+.sec-lead { font-size: .95rem; color: var(--muted); max-width: 600px; line-height: 1.65; }
+
+/* ══════════════ HERO ══════════════ */
+.hero {
+  background: var(--dark); color: #fff;
+  position: relative; overflow: hidden;
+  padding: 80px 0 68px;
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255,60,0,.2), transparent 38%),
+    radial-gradient(circle at 10% 88%, rgba(255,60,0,.09), transparent 35%);
+}
+.hero .wrap { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 36px; align-items: center; }
+
+.hero-eyebrow {
+  font-size: .75rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255,255,255,.5); margin-bottom: 16px;
+}
+.hero-eyebrow b { color: var(--accent); }
+
+.hero h1 {
+  font-size: 2.7rem; font-weight: 900; letter-spacing: -.035em;
+  line-height: 1.06; margin-bottom: 16px;
+}
+.hero h1 .ac { color: var(--accent); }
+
+.hero-desc {
+  font-size: 1.05rem; color: rgba(255,255,255,.75); line-height: 1.6;
+  max-width: 480px; margin-bottom: 26px;
+}
+.hero-desc strong { color: #fff; font-weight: 700; }
+
+.hero-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 28px; }
+.hero-chips span {
+  font-family: var(--mono); font-size: .72rem;
+  padding: 5px 11px; border: 1px solid rgba(255,255,255,.16);
+  border-radius: 5px; color: rgba(255,255,255,.8);
+}
+
+.hero-nums { display: flex; gap: 26px; flex-wrap: wrap; }
+.hero-nums .n-val { font-size: 1.45rem; font-weight: 900; color: var(--accent); line-height: 1; }
+.hero-nums .n-val sub { font-size: .85rem; color: rgba(255,255,255,.38); font-weight: 700; vertical-align: baseline; }
+.hero-nums .n-lbl { font-size: .7rem; color: rgba(255,255,255,.45); margin-top: 4px; letter-spacing: .03em; }
+
+/* 파형 */
+.waveform { display: flex; align-items: center; gap: 5px; height: 180px; padding: 0 2px; }
+.waveform i {
+  display: block; width: 6px; border-radius: 3px;
+  background: linear-gradient(180deg, var(--accent), rgba(255,60,0,.3));
+  animation: wv 1.8s ease-in-out infinite;
+}
+@keyframes wv { 0%,100%{height:16%;opacity:.45;} 50%{height:90%;opacity:1;} }
+.waveform i:nth-child(1){animation-delay:0s}
+.waveform i:nth-child(2){animation-delay:.13s}
+.waveform i:nth-child(3){animation-delay:.26s}
+.waveform i:nth-child(4){animation-delay:.39s}
+.waveform i:nth-child(5){animation-delay:.52s}
+.waveform i:nth-child(6){animation-delay:.65s}
+.waveform i:nth-child(7){animation-delay:.78s}
+.waveform i:nth-child(8){animation-delay:.91s}
+.waveform i:nth-child(9){animation-delay:1.04s}
+.waveform i:nth-child(10){animation-delay:1.17s}
+.waveform i:nth-child(11){animation-delay:1.3s}
+
+/* ══════════════ 기존 문제 ══════════════ */
+.prob { background: var(--card); border-bottom: 1px solid var(--border); }
+.prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+
+.prob-list { list-style: none; display: flex; flex-direction: column; gap: 13px; }
+.prob-list li {
+  display: flex; gap: 12px; font-size: .92rem;
+  color: #2c2c3a; line-height: 1.55;
+}
+.prob-list li::before {
+  content: "✕"; flex-shrink: 0; width: 20px; height: 20px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: rgba(255,60,0,.1); color: var(--accent);
+  font-size: .65rem; font-weight: 800; margin-top: 2px;
+}
+
+.role-box {
+  background: var(--dark); color: #fff; border-radius: 12px;
+  padding: 26px 24px; display: flex; flex-direction: column; gap: 12px;
+}
+.role-box .rb-eyebrow {
+  font-size: .65rem; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent);
+}
+.role-box .rb-title { font-size: 1.05rem; font-weight: 800; line-height: 1.3; }
+.role-box .rb-items { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.role-box .rb-items li { display: flex; gap: 10px; font-size: .83rem; color: rgba(255,255,255,.75); line-height: 1.5; }
+.role-box .rb-items li::before {
+  content: counter(li); counter-increment: li;
+  flex-shrink: 0; font-size: .7rem; font-weight: 800;
+  color: var(--accent); padding-top: 1px;
+}
+.role-box .rb-items { counter-reset: li; }
+
+/* ══════════════ 시스템 구조 ══════════════ */
+.arch { background: var(--bg); }
+.arch-frame {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 26px 22px 18px; margin-top: 30px;
+  box-shadow: 0 8px 32px rgba(26,26,46,.07);
+}
+.arch-frame svg { width: 100%; height: auto; display: block; }
+.arch-legend {
+  display: flex; flex-wrap: wrap; gap: 20px; margin-top: 16px;
+  padding-top: 14px; border-top: 1px dashed var(--line);
+}
+.arch-legend span { display: flex; align-items: center; gap: 7px; font-size: .76rem; color: var(--muted); }
+.lg-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+/* ══════════════ 진행 사항 ══════════════ */
+.work { background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.work-items { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 30px; }
+.wi {
+  border: 1px solid var(--border); border-radius: 10px; padding: 20px 20px 18px;
+  background: var(--bg);
+}
+.wi:hover { border-color: rgba(255,60,0,.35); }
+.wi.full { grid-column: 1 / -1; background: var(--dark); border-color: var(--dark); }
+
+.wi-no { font-family: var(--mono); font-size: .75rem; font-weight: 700; color: var(--accent); }
+.wi h3 { font-size: 1rem; font-weight: 800; margin: 7px 0 7px; letter-spacing: -.02em; }
+.wi.full h3 { color: #fff; font-size: 1.15rem; }
+.wi p { font-size: .84rem; color: var(--muted); line-height: 1.6; }
+.wi.full p { color: rgba(255,255,255,.68); }
+.wi .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+.chip {
+  font-family: var(--mono); font-size: .68rem; padding: 3px 8px;
+  border-radius: 4px; background: #fff; border: 1px solid var(--border); color: #4a4a57;
+}
+.wi.full .chip { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14); color: rgba(255,255,255,.82); }
+
+/* 코드 스니펫 */
+.code-row {
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px;
+  margin-top: 20px; align-items: stretch;
+}
+.code-card {
+  background: var(--darker); border-radius: 10px; overflow: hidden;
+  box-shadow: 0 8px 28px rgba(26,26,46,.18);
+}
+.code-top {
+  display: flex; align-items: center; gap: 7px; padding: 10px 14px;
+  background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.code-top i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+.code-top .fn { margin-left: 8px; font-family: var(--mono); font-size: .72rem; color: rgba(255,255,255,.4); }
+.code-card pre {
+  margin: 0; padding: 16px 18px; font-family: var(--mono);
+  font-size: .78rem; line-height: 1.72; color: #d4d4e0; overflow-x: auto;
+}
+.tk-k { color: #79b8ff; }
+.tk-s { color: #ffab70; }
+.tk-c { color: #6b6b8a; font-style: italic; }
+.tk-a { color: var(--accent); }
+
+.code-notes { display: flex; flex-direction: column; gap: 12px; }
+.cn {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 18px 20px;
+}
+.cn.accent-l { border-left: 3px solid var(--accent); }
+.cn h4 { font-size: .9rem; font-weight: 800; margin-bottom: 5px; }
+.cn p { font-size: .82rem; color: var(--muted); line-height: 1.58; }
+.cn .settings { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.setting { display: flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: .76rem; }
+.setting .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.setting .desc { font-family: 'Pretendard', sans-serif; font-size: .73rem; color: var(--muted); margin-left: auto; }
+
+/* ══════════════ 결과 ══════════════ */
+.result { background: var(--dark); color: #fff; }
+.result .sec-title { color: #fff; }
+.result .sec-lead { color: rgba(255,255,255,.58); }
+
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; }
+.metric {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px; padding: 24px;
+}
+.m-flow { display: flex; align-items: baseline; gap: 12px; }
+.m-before { font-size: 1.5rem; font-weight: 800; color: rgba(255,255,255,.3); }
+.m-arrow { color: var(--accent); font-size: 1.2rem; }
+.m-after { font-size: 2.8rem; font-weight: 900; color: var(--accent); line-height: 1; letter-spacing: -.03em; }
+.m-label { font-size: .95rem; font-weight: 700; margin: 12px 0 10px; }
+.m-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.m-tags span {
+  font-size: .74rem; padding: 4px 10px; border-radius: 6px;
+  background: rgba(255,255,255,.07); color: rgba(255,255,255,.8);
+}
+.m-tags span.mono { font-family: var(--mono); font-size: .69rem; }
+
+.transition {
+  margin-top: 16px; padding: 18px 22px; border-radius: 10px;
+  background: rgba(255,60,0,.1); border: 1px solid rgba(255,60,0,.22);
+  font-size: .95rem; line-height: 1.62; color: rgba(255,255,255,.88);
+}
+.transition b { color: var(--accent); }
+
+.contrib {
+  margin-top: 14px; display: flex; gap: 14px; align-items: flex-start;
+  padding: 18px 20px; border-radius: 10px;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+}
+.contrib .ci { font-family: var(--mono); font-size: 1.45rem; font-weight: 900; color: var(--accent); line-height: 1; white-space: nowrap; }
+.contrib .ct { font-size: .82rem; color: rgba(255,255,255,.68); line-height: 1.6; }
+.contrib .ct b { color: rgba(255,255,255,.95); }
+
+/* 협업·도구 (결과 하단) */
+.collab-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+  margin-top: 32px; padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+.collab-col h4 {
+  font-size: .68rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 12px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.collab-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.collab-list li { font-size: .84rem; color: rgba(255,255,255,.65); display: flex; gap: 9px; line-height: 1.5; }
+.collab-list li::before { content: "—"; color: rgba(255,255,255,.2); flex-shrink: 0; }
+.collab-list li code {
+  font-family: var(--mono); font-size: .76rem;
+  background: rgba(255,255,255,.08); padding: 1px 5px;
+  border-radius: 3px; color: var(--accent);
+}
+
+/* 스택 */
+.stack-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 24px; padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.stack-row span {
+  font-family: var(--mono); font-size: .76rem;
+  padding: 6px 12px; border: 1px solid rgba(255,255,255,.13);
+  border-radius: 6px; color: rgba(255,255,255,.72);
+}
+.stack-row span b { color: var(--accent); }
+
+/* ══════════════ FOOTER ══════════════ */
+footer {
+  background: var(--darker); color: rgba(255,255,255,.45);
+  padding: 36px 0;
+}
+footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; }
+footer .fn { font-size: 1rem; font-weight: 800; color: #fff; }
+footer .fr { font-size: .8rem; color: rgba(255,255,255,.42); margin-top: 3px; }
+footer a { color: var(--accent); text-decoration: none; font-family: var(--mono); font-size: .82rem; }
+footer a:hover { text-decoration: underline; }
+
+/* 반응형 */
+@media (max-width: 700px) {
+  .hero .wrap, .prob-grid, .code-row, .metrics, .collab-row { grid-template-columns: 1fr; }
+  .waveform { height: 100px; }
+  .hero h1 { font-size: 2.1rem; }
+  .work-items { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HERO ══════════════ -->
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="hero-eyebrow">이지양 <b>·</b> jiyang-lee &nbsp;|&nbsp; AIoT · Backend Developer</div>
+      <h1>Super <span class="ac">Marimo</span><br>AIoT Voice Agent</h1>
+      <p class="hero-desc">분리된 API · LLM · 음성 · 센서를 연결해,<br>사용자 발화와 거리 감지가 <strong>실제 음성 응답으로 이어지는</strong> end-to-end 흐름을 설계했습니다.</p>
+      <div class="hero-chips">
+        <span>STT → LLM → TTS</span>
+        <span>voice-agent</span>
+        <span>action_proposal</span>
+        <span>RP2040 · Wemos</span>
+      </div>
+      <div class="hero-nums">
+        <div><div class="n-val">3</div><div class="n-lbl">음성 입력 경로</div></div>
+        <div><div class="n-val">3</div><div class="n-lbl">LLM 런타임 제어 설정</div></div>
+        <div><div class="n-val">37<sub>/61</sub></div><div class="n-lbl">기본 작성자 커밋</div></div>
+      </div>
+    </div>
+    <div class="waveform" aria-hidden="true">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ 기존 문제 ══════════════ -->
+<section class="prob">
+  <div class="wrap">
+    <div class="eyebrow">기존 문제</div>
+    <h2 class="sec-title">AI는 있었지만, 발화에서 응답까지 흐르는 길이 없었다</h2>
+    <p class="sec-lead">각 서비스는 개별 개발 상태. 입력은 저장까지만 도달하고, 발화·센서 신호가 음성 응답으로 닿지 못하는 단절 구간을 이어야 했습니다.</p>
+    <div class="prob-grid">
+      <ul class="prob-list">
+        <li>API · LLM · 음성 · 프론트엔드가 <b>개별 개발 상태</b>로 분리</li>
+        <li>RP2040 마이크 입력을 <b>지속 처리할 주체 부재</b></li>
+        <li>Wemos 센서 데이터는 <b>DB 저장까지만</b>, 이후 동작 연결 없음</li>
+        <li>발화·거리 감지가 <b>실제 음성 응답으로 이어지지 않음</b></li>
+      </ul>
+      <div class="role-box">
+        <div class="rb-eyebrow">맡은 역할</div>
+        <div class="rb-title">AI 음성 대화 흐름 완성에 집중</div>
+        <ol class="rb-items">
+          <li>STT · LLM · TTS 음성 파이프라인 설계</li>
+          <li>LLM 응답 계약 + 장치 동작 제안 구조 정의</li>
+          <li>거리 센서 기반 선제 인사 이벤트 연결</li>
+          <li>end-to-end 호출 경로 구성</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 시스템 구조 ══════════════ -->
+<section class="arch">
+  <div class="wrap">
+    <div class="eyebrow">시스템 구조</div>
+    <h2 class="sec-title">입력 3개 → voice-agent → STT · LLM · TTS → 음성 재생</h2>
+    <p class="sec-lead">3개 입력 경로가 voice-agent 오케스트레이션으로 수렴하고, LLM은 대화 답변과 장치 동작 제안을 동시에 출력합니다. 제안은 검증 계층을 거쳐 안전한 범위로만 강제됩니다.</p>
+
+    <div class="arch-frame">
+      <svg viewBox="0 0 980 460" role="img" aria-label="Super Marimo 시스템 아키텍처 다이어그램">
+        <defs>
+          <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#FF3C00"/>
+          </marker>
+          <marker id="arG" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#9a9aa8"/>
+          </marker>
+        </defs>
+
+        <!-- voice-agent 외곽 -->
+        <rect x="232" y="36" width="748" height="382" rx="13" fill="none" stroke="#d2d2da" stroke-width="1.5" stroke-dasharray="7 5"/>
+        <text x="250" y="28" font-family="Consolas,monospace" font-size="12" font-weight="700" fill="#FF3C00">voice-agent orchestration</text>
+
+        <!-- INPUT SOURCES 라벨 -->
+        <text x="2" y="18" font-family="Pretendard,sans-serif" font-size="10.5" font-weight="700" fill="#FF3C00" letter-spacing="1">INPUT SOURCES</text>
+
+        <!-- Mic -->
+        <rect x="0" y="36" width="190" height="74" rx="10" fill="#1a1a2e"/>
+        <text x="22" y="68" font-family="Pretendard,sans-serif" font-size="20">🎤</text>
+        <text x="54" y="64" font-family="Pretendard,sans-serif" font-size="13.5" font-weight="700" fill="#fff">RP2040 Mic</text>
+        <text x="54" y="82" font-family="Pretendard,sans-serif" font-size="10.5" fill="rgba(255,255,255,.58)">PCM 수신 · VAD</text>
+
+        <!-- Wemos -->
+        <rect x="0" y="170" width="190" height="74" rx="10" fill="#1a1a2e"/>
+        <text x="22" y="202" font-family="Pretendard,sans-serif" font-size="20">📡</text>
+        <text x="54" y="198" font-family="Pretendard,sans-serif" font-size="13.5" font-weight="700" fill="#fff">Wemos 거리센서</text>
+        <text x="54" y="216" font-family="Pretendard,sans-serif" font-size="10.5" fill="rgba(255,255,255,.58)">선제 인사 트리거</text>
+
+        <!-- Frontend -->
+        <rect x="0" y="304" width="190" height="74" rx="10" fill="#1a1a2e"/>
+        <text x="22" y="336" font-family="Pretendard,sans-serif" font-size="20">🖥️</text>
+        <text x="54" y="332" font-family="Pretendard,sans-serif" font-size="13.5" font-weight="700" fill="#fff">Frontend</text>
+        <text x="54" y="350" font-family="Pretendard,sans-serif" font-size="10.5" fill="rgba(255,255,255,.58)">수동 입력</text>
+
+        <!-- 화살표 → STT 수렴 -->
+        <path d="M190,73  C218,73 216,146 278,146"  fill="none" stroke="#9a9aa8" stroke-width="1.8" marker-end="url(#arG)"/>
+        <path d="M190,207 C238,207 228,156 278,152" fill="none" stroke="#9a9aa8" stroke-width="1.8" marker-end="url(#arG)"/>
+        <path d="M190,341 C226,341 238,162 278,158" fill="none" stroke="#9a9aa8" stroke-width="1.8" marker-end="url(#arG)"/>
+
+        <!-- STT -->
+        <rect x="280" y="116" width="110" height="76" rx="10" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+        <text x="335" y="149" font-family="Consolas,monospace" font-size="15.5" font-weight="700" fill="#1a1a2e" text-anchor="middle">STT</text>
+        <text x="335" y="170" font-family="Pretendard,sans-serif" font-size="10" fill="#8a8a98" text-anchor="middle">음성 → 텍스트</text>
+
+        <!-- STT → LLM -->
+        <path d="M390,154 L430,154" fill="none" stroke="#FF3C00" stroke-width="2.5" marker-end="url(#ar)"/>
+
+        <!-- LLM -->
+        <rect x="432" y="96" width="202" height="116" rx="10" fill="#1a1a2e"/>
+        <text x="533" y="124" font-family="Consolas,monospace" font-size="16" font-weight="800" fill="#FF3C00" text-anchor="middle">LLM</text>
+        <line x1="452" y1="137" x2="616" y2="137" stroke="rgba(255,255,255,.14)" stroke-width="1"/>
+        <text x="452" y="159" font-family="Consolas,monospace" font-size="11" fill="#79b8ff">answer</text>
+        <text x="520" y="159" font-family="Pretendard,sans-serif" font-size="10" fill="rgba(255,255,255,.52)">대화 응답</text>
+        <text x="452" y="182" font-family="Consolas,monospace" font-size="11" fill="#FF3C00">action_proposal</text>
+        <text x="452" y="199" font-family="Pretendard,sans-serif" font-size="10" fill="rgba(255,255,255,.52)">장치 동작 제안</text>
+
+        <!-- LLM → TTS -->
+        <path d="M634,132 L676,132" fill="none" stroke="#FF3C00" stroke-width="2.5" marker-end="url(#ar)"/>
+
+        <!-- TTS -->
+        <rect x="678" y="96" width="110" height="72" rx="10" fill="#fff" stroke="#1a1a2e" stroke-width="2"/>
+        <text x="733" y="127" font-family="Consolas,monospace" font-size="15.5" font-weight="700" fill="#1a1a2e" text-anchor="middle">TTS</text>
+        <text x="733" y="147" font-family="Pretendard,sans-serif" font-size="10" fill="#8a8a98" text-anchor="middle">텍스트 → 음성</text>
+
+        <!-- TTS → 재생 -->
+        <path d="M788,132 L828,132" fill="none" stroke="#FF3C00" stroke-width="2.5" marker-end="url(#ar)"/>
+
+        <!-- 재생 -->
+        <rect x="830" y="96" width="134" height="72" rx="10" fill="#FF3C00"/>
+        <text x="856" y="140" font-family="Pretendard,sans-serif" font-size="19">🔊</text>
+        <text x="886" y="129" font-family="Pretendard,sans-serif" font-size="12.5" font-weight="700" fill="#fff">음성 재생</text>
+        <text x="886" y="147" font-family="Pretendard,sans-serif" font-size="10" fill="rgba(255,255,255,.82)">Windows Bridge</text>
+
+        <!-- action_proposal → 검증 계층 -->
+        <path d="M497,212 L497,290" fill="none" stroke="#FF3C00" stroke-width="2" marker-end="url(#ar)"/>
+        <text x="507" y="256" font-family="Consolas,monospace" font-size="10" fill="#FF3C00">action_proposal</text>
+
+        <!-- 검증 계층 -->
+        <rect x="374" y="292" width="246" height="78" rx="10" fill="#fff" stroke="#FF3C00" stroke-width="2"/>
+        <text x="393" y="320" font-family="Pretendard,sans-serif" font-size="13.5" font-weight="800" fill="#1a1a2e">🛡 허용 설정 검증 계층</text>
+        <text x="393" y="341" font-family="Pretendard,sans-serif" font-size="10.5" fill="#8a8a98">LLM 제안을 안전한 장치 동작</text>
+        <text x="393" y="357" font-family="Pretendard,sans-serif" font-size="10.5" fill="#8a8a98">범위로만 강제 (allow-list)</text>
+
+        <!-- 검증 → 런타임 제어 -->
+        <path d="M620,331 L660,331" fill="none" stroke="#FF3C00" stroke-width="2" marker-end="url(#ar)"/>
+
+        <!-- 런타임 제어 -->
+        <rect x="662" y="292" width="300" height="78" rx="10" fill="#f3f3f6" stroke="#d2d2da" stroke-width="1.5"/>
+        <text x="680" y="316" font-family="Pretendard,sans-serif" font-size="10" font-weight="700" fill="#FF3C00" letter-spacing="1">RUNTIME CONTROL</text>
+        <text x="680" y="338" font-family="Consolas,monospace" font-size="10.5" fill="#2c2c38">wake_enabled · distance_detection_enabled</text>
+        <text x="680" y="357" font-family="Consolas,monospace" font-size="10.5" fill="#2c2c38">distance_threshold_cm</text>
+      </svg>
+
+      <div class="arch-legend">
+        <span><i class="lg-dot" style="background:#1a1a2e"></i> 직접 구현 / 설계</span>
+        <span><i class="lg-dot" style="background:#FF3C00"></i> AI 핵심 흐름</span>
+        <span><i class="lg-dot" style="background:#fff;border:1.5px solid #1a1a2e"></i> 단계 컴포넌트</span>
+        <span><i class="lg-dot" style="background:#9a9aa8"></i> 입력 수렴</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 진행 사항 ══════════════ -->
+<section class="work">
+  <div class="wrap">
+    <div class="eyebrow">진행 사항</div>
+    <h2 class="sec-title">직접 구현 — AI 흐름 중심</h2>
+    <p class="sec-lead">통합 인터페이스보다 음성·센서가 응답으로 이어지는 AI 파이프라인을 우선으로 두고 직접 설계·구현했습니다.</p>
+
+    <div class="work-items">
+      <div class="wi full">
+        <span class="wi-no">01 · CORE</span>
+        <h3>voice-agent 오케스트레이션 설계</h3>
+        <p>STT → LLM → TTS 단계를 조율하고 대화 상태를 관리하는 흐름의 중심. 입력부터 음성 재생까지 호출 순서와 예외 상태를 직접 설계했습니다.</p>
+        <div class="chips"><span>state management</span><span>STT</span><span>LLM</span><span>TTS</span></div>
+      </div>
+      <div class="wi">
+        <span class="wi-no">02</span>
+        <h3>LLM 응답 계약 설계</h3>
+        <p><code style="font-family:var(--mono);font-size:.82em;background:#f0f0f2;padding:1px 5px;border-radius:3px">answer</code> + <code style="font-family:var(--mono);font-size:.82em;background:#f0f0f2;padding:1px 5px;border-radius:3px">action_proposal</code> 이중 출력 계약을 정의해 LLM이 대화와 장치 동작 제안을 함께 반환하도록 설계했습니다.</p>
+      </div>
+      <div class="wi">
+        <span class="wi-no">03</span>
+        <h3>허용 설정 검증 계층</h3>
+        <p>LLM 제안을 안전한 장치 범위로만 강제하는 검증 계층 구현. 사전 정의된 allow-list 외의 동작 제안은 차단됩니다.</p>
+      </div>
+      <div class="wi">
+        <span class="wi-no">04</span>
+        <h3>Windows Bridge — 장치 입력 처리</h3>
+        <p>RP2040 PCM 수신 · 음성 구간 감지(VAD) · 재생 제어를 구현해 하드웨어 음성 입출력 경로를 연결했습니다.</p>
+        <div class="chips"><span>PCM</span><span>VAD</span><span>playback</span></div>
+      </div>
+      <div class="wi">
+        <span class="wi-no">05</span>
+        <h3>센서 → AI 트리거 연결</h3>
+        <p>Wemos 거리 센서 입력을 LLM 기반 선제 인사 트리거로 연결. 사람이 다가오면 먼저 말을 거는 흐름을 만들었습니다.</p>
+      </div>
+    </div>
+
+    <!-- LLM 응답 계약 코드 스니펫 -->
+    <div class="code-row">
+      <div class="code-card">
+        <div class="code-top">
+          <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+          <span class="fn">llm_response.json</span>
+        </div>
+<pre><span class="tk-c">// LLM 단일 응답 = 대화 + 동작 제안</span>
+{
+  <span class="tk-k">"answer"</span>: <span class="tk-s">"네, 거실 조명을 켤게요."</span>,
+  <span class="tk-k">"action_proposal"</span>: {
+    <span class="tk-k">"setting"</span>: <span class="tk-s">"wake_enabled"</span>,
+    <span class="tk-k">"value"</span>: <span class="tk-a">true</span>
+  }
+}
+
+<span class="tk-c">// → 검증 계층(allow-list) 통과 후</span>
+<span class="tk-c">//   실제 장치에 반영</span></pre>
+      </div>
+      <div class="code-notes">
+        <div class="cn accent-l">
+          <h4>🛡 허용 설정 검증 계층</h4>
+          <p>LLM의 자유로운 제안을 그대로 실행하지 않고, 사전 정의된 안전 범위 안에서만 적용합니다.</p>
+        </div>
+        <div class="cn">
+          <h4>런타임 제어 설정 항목</h4>
+          <div class="settings">
+            <div class="setting"><span class="dot"></span>wake_enabled<span class="desc">웨이크 활성</span></div>
+            <div class="setting"><span class="dot"></span>distance_detection_enabled<span class="desc">거리감지</span></div>
+            <div class="setting"><span class="dot"></span>distance_threshold_cm<span class="desc">감지 거리</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 결과 ══════════════ -->
+<section class="result">
+  <div class="wrap">
+    <div class="eyebrow">결과</div>
+    <h2 class="sec-title">저장 중심 구조 → 응답으로 연결된 구조</h2>
+    <p class="sec-lead">센서값을 저장하던 구조를, 센서 이벤트 · LLM 응답 · TTS 재생이 이어지는 흐름으로 전환했습니다.</p>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="m-flow"><span class="m-before">0</span><span class="m-arrow">→</span><span class="m-after">3</span></div>
+        <div class="m-label">음성 응답으로 연결된 입력 경로</div>
+        <div class="m-tags">
+          <span>RP2040 마이크 음성</span>
+          <span>Wemos 거리센서 선제 반응</span>
+          <span>프론트 수동 입력</span>
+        </div>
+      </div>
+      <div class="metric">
+        <div class="m-flow"><span class="m-before">0</span><span class="m-arrow">→</span><span class="m-after">3</span></div>
+        <div class="m-label">LLM이 제안 가능한 런타임 설정</div>
+        <div class="m-tags">
+          <span class="mono">wake_enabled</span>
+          <span class="mono">distance_detection_enabled</span>
+          <span class="mono">distance_threshold_cm</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="transition">
+      센서값 저장 중심 구조에서 <b>센서 이벤트 · LLM 응답 · TTS 재생이 연결된</b> 구조로 전환 — 발화와 거리 감지가 실제 음성 응답으로 닿습니다.
+    </div>
+
+    <div class="contrib">
+      <div class="ci">37/61</div>
+      <div class="ct"><b>Git 기본 작성자 기준 커밋 (전체 61개 중 37개).</b> 커밋 수는 작업량 참고 지표이며 기여 품질·비율로 단정하지 않습니다. 동일인 추정 별도 계정이 있어 기여율 계산은 제외했습니다.</div>
+    </div>
+
+    <!-- 협업·도구 -->
+    <div class="collab-row">
+      <div class="collab-col">
+        <h4>협업 · 통합</h4>
+        <ul class="collab-list">
+          <li>팀원 API·LLM·음성·프론트엔드 입출력 규격 확인 및 통합 경로 조정</li>
+          <li>병렬 개발 결과 <code>main</code> 반영, Docker Compose 실행 순서·프로필 정리</li>
+          <li>팀 결과물 기준 동작 흐름 및 운영 문서 정리</li>
+        </ul>
+      </div>
+      <div class="collab-col">
+        <h4>도구 활용</h4>
+        <ul class="collab-list">
+          <li><code>git</code> 로그·커밋으로 변경 범위와 작성 근거 확인</li>
+          <li><code>docker compose</code>로 다중 서비스 기동 순서 확인</li>
+          <li><code>pytest</code>로 API·Bridge·voice-agent·LLM 계약 테스트</li>
+          <li>시리얼·서비스 로그로 STT·LLM·TTS 단계별 점검</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="stack-row">
+      <span><b>Python</b></span>
+      <span>FastAPI</span>
+      <span>Docker Compose</span>
+      <span>pytest</span>
+      <span><b>LLM</b> · STT · TTS</span>
+      <span>RP2040</span>
+      <span>Wemos (ESP)</span>
+      <span>WebSocket / PCM</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="fn">이지양 · jiyang-lee</div>
+      <div class="fr">AIoT · Backend Developer — Super Marimo</div>
+    </div>
+    <a href="mailto:wldid0129@gmail.com">wldid0129@gmail.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

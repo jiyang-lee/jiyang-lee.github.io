@@ -1,0 +1,17 @@
+# 작업용 드래프트
+AIoT_Agent_*.html
+Super_Marimo_*.html
+
+# 스크린샷
+*.png
+
+# PPTX / 대용량
+*.pptx
+unpacked/
+
+# 소스 문서
+*.md
+*.txt
+
+# Claude 설정
+.claude/
