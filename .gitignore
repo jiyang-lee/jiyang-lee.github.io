@@ -8,3 +8,6 @@ unpacked/
 
 # Claude 설정
 .claude/
+
+# 실제 프로젝트 미리보기는 배포 에셋
+!assets/*.png
